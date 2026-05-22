@@ -1,0 +1,16 @@
+[project]
+name = "dietly-cli"
+version = "1.0.0"
+description = "Scrape diet prices from dietly.pl for a given Polish city"
+requires-python = ">=3.11"
+dependencies = [
+    "questionary>=2.1.1",
+    "requests>=2.34.2",
+    "tqdm>=4.67.3",
+]
+
+[project.scripts]
+dietly-cli = "dietly_cli:main"
+
+[tool.uv]
+package = true
