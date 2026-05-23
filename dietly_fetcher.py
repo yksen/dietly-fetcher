@@ -81,6 +81,7 @@ CSV_COLUMNS = [
     "base_price_per_day_pln",
     "promo_price_per_day_pln",
     "tier_final_price_pln",
+    "final_best_price_pln",
 ]
 
 
@@ -241,6 +242,22 @@ def apply_tier_discount(effective: float, value: float, dtype: str) -> float:
     return round(effective, 2)
 
 
+def best_price_with_delivery(
+    base_price: float,
+    promo_price: float | None,
+    tier_price: float | str,
+    delivery_fee: float | str,
+) -> float:
+    if tier_price != "":
+        best = float(tier_price)
+    elif promo_price is not None:
+        best = promo_price
+    else:
+        best = base_price
+    fee = float(delivery_fee) if delivery_fee != "" else 0.0
+    return round(best + fee, 2)
+
+
 def tier_rows(
     base_row: dict[str, Any],
     discounts: list[dict[str, Any]],
@@ -250,7 +267,16 @@ def tier_rows(
     """Length-based tier discounts do NOT stack with the promo code; whichever
     is larger applies. So tier_final_price is computed off base_price, and we
     drop tiers that don't beat promo_price."""
-    rows = [{**base_row, "tier_min_days": "", "tier_discount_value": "", "tier_discount_type": "", "tier_final_price_pln": ""}]
+    delivery_fee = base_row.get("delivery_fee_pln", "")
+    base_tier_price = ""
+    rows = [{
+        **base_row,
+        "tier_min_days": "",
+        "tier_discount_value": "",
+        "tier_discount_type": "",
+        "tier_final_price_pln": "",
+        "final_best_price_pln": best_price_with_delivery(base_price, promo_price, base_tier_price, delivery_fee),
+    }]
     for d in sorted(discounts or [], key=lambda x: x.get("minimumDays") or 0):
         min_days = d.get("minimumDays")
         value = d.get("discount")
@@ -266,6 +292,7 @@ def tier_rows(
             "tier_discount_value": float(value),
             "tier_discount_type": dtype,
             "tier_final_price_pln": tier_price,
+            "final_best_price_pln": best_price_with_delivery(base_price, promo_price, tier_price, delivery_fee),
         })
     return rows
 
