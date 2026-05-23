@@ -1,4 +1,4 @@
-# dietly-cli
+# dietly-fetcher
 
 A CLI tool for scraping diet catering offers from [dietly.pl](https://dietly.pl) for a given Polish city. Helps compare current prices, promo codes and length-based discounts so you can pick the best deal each month.
 
@@ -24,7 +24,7 @@ Uses the public, unauthenticated JSON API the dietly.pl frontend itself talks to
 Run with no arguments:
 
 ```bash
-uv run dietly-cli
+uv run dietly-fetcher
 ```
 
 The wizard walks you through: city → calorie values → meals per day → diet types → whether to include "Wybór menu". Nothing is pre-selected; leave a checkbox prompt empty for "no filter on this dimension".
@@ -34,7 +34,7 @@ The wizard walks you through: city → calorie values → meals per day → diet
 Pass `--city` plus any filter flags. **No filters are applied by default** — every flag you add narrows the result set.
 
 ```bash
-uv run dietly-cli --city warszawa --calories 2000 3000 --meals 5 --diet-tags STANDARD
+uv run dietly-fetcher --city warszawa --calories 2000 3000 --meals 5 --diet-tags STANDARD
 ```
 
 Full flag reference:
@@ -57,15 +57,15 @@ Known `--diet-tags` values: `STANDARD`, `VEGETARIAN`, `VEGAN`, `VEGE AND FISH`, 
 
 ```bash
 # 2000+3000 kcal, 5 meals, standard diet only, in Warsaw
-uv run dietly-cli --city warszawa \
+uv run dietly-fetcher --city warszawa \
     --calories 2000 3000 --meals 5 --diet-tags STANDARD
 
 # Vegetarian and vegan diets, 1500 kcal, 4 meals, Kraków
-uv run dietly-cli --city krakow \
+uv run dietly-fetcher --city krakow \
     --diet-tags VEGETARIAN VEGAN --calories 1500 --meals 4
 
 # Everything for Gdańsk, including "Wybór menu" — large output
-uv run dietly-cli --city gdansk --include-menu-config
+uv run dietly-fetcher --city gdansk --include-menu-config
 ```
 
 ## CSV schema

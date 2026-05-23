@@ -1,5 +1,5 @@
 [project]
-name = "dietly-cli"
+name = "dietly-fetcher"
 version = "1.0.0"
 description = "Scrape diet prices from dietly.pl for a given Polish city"
 requires-python = ">=3.11"
@@ -10,7 +10,7 @@ dependencies = [
 ]
 
 [project.scripts]
-dietly-cli = "dietly_cli:main"
+dietly-fetcher = "dietly_fetcher:main"
 
 [tool.uv]
 package = true
